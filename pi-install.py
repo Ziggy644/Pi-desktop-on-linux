@@ -44,7 +44,7 @@ def install_pi_app():
         release = requests.get("https://api.github.com/repos/pi-node/pi-node/releases/latest")
     except:
         print_log(2, "Unable to fetch Pi node release metadata from Github: " + traceback.format_exc())
-        exit()
+        raise SystemExit(1)
     try:
         jdata = json.loads(release.text)
         version_name = jdata["tag_name"]
@@ -54,13 +54,24 @@ def install_pi_app():
             current_version_file.close()
             if current_version.strip() == version_name:
                 print_log(0, "Your Pi node version is up-to-date.")
-                exit()
+                raise SystemExit(0)
             else:
+                print_log(0, "Your Pi node needs to be updated.")
                 current_version_file = open(INSTALL_DIRECTORY + "/current_version.txt", "w")
                 current_version_file.write(version_name)
                 current_version_file.close()
-    except:
-        print_log(2, "Unable to determine the latest Pi node version from Github: " + traceback.format_exc())
+        else:
+            print_log(0, "Your Pi node needs to be updated.")
+            current_version_file = open(INSTALL_DIRECTORY + "/current_version.txt", "w")
+            current_version_file.write(version_name)
+            current_version_file.close()
+    except Exception as e:
+        exception_type = type(e).__name__
+        if exception_type == "SystemExit":
+            raise SystemExit(0)
+        else:
+            print_log(2, "Unable to determine the latest Pi node version from Github.")
+            raise SystemExit(1)
     try:
         download_url = find_pi_version(jdata["assets"])
         if download_url == "":
@@ -74,7 +85,7 @@ def install_pi_app():
         release = requests.get("https://api.github.com/repos/electron/electron/releases/latest")
     except:
         print_log(2, "Unable to fetch electron release metadata from Github")
-        sys.exit()
+        raise SystemExit(1)
     try:
         jdata = json.loads(release.text)
         download_url = find_electron_version(jdata["assets"])
@@ -85,7 +96,7 @@ def install_pi_app():
             subprocess.run(["wget", "-P", INSTALL_DIRECTORY + "/tmp", download_url])
     except:
         print_log(2, "Unable to download electron release file.")
-        exit()
+        raise SystemExit(1)
     print_log(0, "Extracting electron archive...")
     try:
         subprocess.run(["7za", "x", INSTALL_DIRECTORY + "/tmp/*.zip", "-o" +  INSTALL_DIRECTORY])
@@ -93,7 +104,7 @@ def install_pi_app():
         subprocess.run(["mv", INSTALL_DIRECTORY + "/electron", INSTALL_DIRECTORY + "/PiNetwork"])
     except:
         print_log(2, "Extraction subprocess failed. Is p7zip installed?")
-        exit(1)
+        raise SystemExit(1)
     print_log(0, "Extracting Pi node binary...")
     try:
         subprocess.run(["7za", "x", INSTALL_DIRECTORY + "/tmp/*.exe", "-o" + INSTALL_DIRECTORY + "/tmp"])
@@ -102,7 +113,7 @@ def install_pi_app():
         subprocess.run(["rm", "-r", INSTALL_DIRECTORY + "/tmp"])
     except:
         print_log(2, "Extraction subprocess failed. Is p7zip installed?")
-        exit()
+        raise SystemExit(1)
     print_log(0, "All done! Launch '" + INSTALL_DIRECTORY + "/PiNetwork --no-sandbox' with root privileges.")
 
 install_pi_app()
