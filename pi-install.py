@@ -44,10 +44,17 @@ def install_pi_app():
         release = requests.get("https://api.github.com/repos/pi-node/pi-node/releases/latest")
     except:
         print_log(2, "Unable to fetch Pi node release metadata from Github: " + traceback.format_exc())
-        sys.exit(1)
+        exit()
     try:
         jdata = json.loads(release.text)
         version_name = jdata["tag_name"]
+        if os.path.exists(INSTALL_DIRECTORY + "/current_version.txt") == True:
+            current_version_file = open(INSTALL_DIRECTORY + "/current_version.txt", "r")
+            current_version = current_version_file.read()
+            current_version_file.close()
+            if current_version.strip() == version_name:
+                print_log(0, "Your Pi node version is up-to-date.")
+                exit()
     except:
         print_log(2, "Unable to determine the latest Pi node version from Github: " + traceback.format_exc())
     try:
@@ -63,7 +70,7 @@ def install_pi_app():
         release = requests.get("https://api.github.com/repos/electron/electron/releases/latest")
     except:
         print_log(2, "Unable to fetch electron release metadata from Github")
-        sys.exit(1)
+        sys.exit()
     try:
         jdata = json.loads(release.text)
         download_url = find_electron_version(jdata["assets"])
@@ -74,7 +81,7 @@ def install_pi_app():
             subprocess.run(["wget", "-P", INSTALL_DIRECTORY + "/tmp", download_url])
     except:
         print_log(2, "Unable to download electron release file.")
-        sys.exit(1)
+        exit()
     print_log(0, "Extracting electron archive...")
     try:
         subprocess.run(["7za", "x", INSTALL_DIRECTORY + "/tmp/*.zip", "-o" +  INSTALL_DIRECTORY])
@@ -82,7 +89,7 @@ def install_pi_app():
         subprocess.run(["mv", INSTALL_DIRECTORY + "/electron", INSTALL_DIRECTORY + "/PiNetwork"])
     except:
         print_log(2, "Extraction subprocess failed. Is p7zip installed?")
-        sys.exit(1)
+        exit(1)
     print_log(0, "Extracting Pi node binary...")
     try:
         subprocess.run(["7za", "x", INSTALL_DIRECTORY + "/tmp/*.exe", "-o" + INSTALL_DIRECTORY + "/tmp"])
@@ -91,7 +98,7 @@ def install_pi_app():
         subprocess.run(["rm", "-r", INSTALL_DIRECTORY + "/tmp"])
     except:
         print_log(2, "Extraction subprocess failed. Is p7zip installed?")
-        sys.exit(1)
+        exit()
     print_log(0, "All done! Launch '" + INSTALL_DIRECTORY + "/PiNetwork --no-sandbox' with root privileges.")
 
 install_pi_app()
