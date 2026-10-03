@@ -20,5 +20,7 @@ cd Pi-desktop-on-linux
 
 chmod +x ./run
 
+./run
+
 # Credits: @pjkgijp (Pi Network)
 Pi donation address: GDL2JCVEQNGNYMO6XQN2CCNMT2EGBDB65VS5QLIQN3UHQ2MI2NIEA7TP
