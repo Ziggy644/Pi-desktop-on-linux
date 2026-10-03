@@ -55,6 +55,10 @@ def install_pi_app():
             if current_version.strip() == version_name:
                 print_log(0, "Your Pi node version is up-to-date.")
                 exit()
+            else:
+                current_version_file = open(INSTALL_DIRECTORY + "/current_version.txt", "w")
+                current_version_file.write(version_name)
+                current_version_file.close()
     except:
         print_log(2, "Unable to determine the latest Pi node version from Github: " + traceback.format_exc())
     try:
