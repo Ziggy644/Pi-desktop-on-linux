@@ -4,10 +4,10 @@ Tested on ubuntu 24.04
 
 # Requirements
 
--python 3.x
--virtualization enabled in BIOS
--Docker (installed via ./run command)
--p7zip (installed via ./run command)
+-python 3.x\n
+-virtualization enabled in BIOS \n
+-Docker (installed via ./run command) \n
+-p7zip (installed via ./run command) \n
 
 # Installation
 
