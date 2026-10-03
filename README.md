@@ -22,5 +22,11 @@ chmod +x ./run
 
 ./run
 
+# Known issues
+
+Sometimes, The Pi node app cannot create the node container by itself. If this happens, manually create the container by running:
+
+sudo docker compose -f '/root/.config/Pi Network/docker-compose.json' create
+
 # Credits: @pjkgijp (Pi Network)
 Pi donation address: GDL2JCVEQNGNYMO6XQN2CCNMT2EGBDB65VS5QLIQN3UHQ2MI2NIEA7TP
