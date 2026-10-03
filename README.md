@@ -15,7 +15,9 @@ Tested on ubuntu 24.04
 # Installation
 
 git clone .git
+
 cd Pi-desktop-on-linux
+
 chmod +x ./run
 
 # Credits: @pjkgijp (Pi Network)
