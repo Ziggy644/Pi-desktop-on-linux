@@ -14,7 +14,7 @@ Tested on ubuntu 24.04
 
 # Installation
 
-git clone .git
+git clone https://github.com/Ziggy644/Pi-desktop-on-linux.git
 
 cd Pi-desktop-on-linux
 
